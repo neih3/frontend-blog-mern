@@ -3,9 +3,12 @@ import React, { useState } from "react";
 import { cloudinaryUpload } from "../../api/blog";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { updateUser } from "../../api/auth";
+import { useDispatch } from "react-redux";
+import { addUser } from "../../reducers/user.reducer";
 
 const Modal = ({ open, setOpen, user }: any) => {
-  console.log(user);
+  const dispatch = useDispatch();
+
   const [preAvatar, setPreAvatar] = useState<File | null>();
 
   const [avatar, setAvatar] = useState(user.avatar || "");
@@ -19,8 +22,8 @@ const Modal = ({ open, setOpen, user }: any) => {
   const updateUserMutation = useMutation({
     mutationFn: (user: any) => updateUser(user),
     onSuccess: (data) => {
-      console.log(data);
       queryClient.invalidateQueries({ queryKey: ["user"] });
+      dispatch(addUser(data));
     },
   });
   async function handleSubmit() {
@@ -52,7 +55,7 @@ const Modal = ({ open, setOpen, user }: any) => {
         />
 
         <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
-          <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+          <div className="flex min-h-full lg:items-end justify-center p-4 text-center items-center sm:p-0">
             <DialogPanel
               style={{ border: "1px solid rgba(255, 255, 255, 0.2)" }}
               transition

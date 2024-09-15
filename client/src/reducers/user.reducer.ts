@@ -1,9 +1,10 @@
 import { createAction, createReducer } from "@reduxjs/toolkit";
 import { clearLocalStorage, getAccessTokenFromLocal } from "../api/auth";
+import User from "../types/user.type";
 
 interface UserState {
   isAuthenticated: boolean;
-  user: any;
+  user: User;
 }
 
 const initailState: UserState = {
@@ -18,7 +19,7 @@ export const checkIsAuthenticated = createAction<boolean>(
 
 export const setAccessToken = createAction<string>("user/setAccessToken");
 
-export const addUser = createAction<any>("user/addUser");
+export const addUser = createAction<User>("user/addUser");
 
 export const logout = createAction("user/logout");
 

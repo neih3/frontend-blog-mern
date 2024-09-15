@@ -3,7 +3,11 @@ import Button from "../Button/Button";
 import { Link } from "react-router-dom";
 import { getAllBlog, getBlogbyGenre } from "../../api/blog";
 
-const Categories = ({ genres }: any) => {
+interface Props {
+  genres: string[];
+}
+
+const Categories = ({ genres }: Props) => {
   const queryClient = useQueryClient();
 
   const getBlogsByGenreMutation = useMutation({
@@ -15,7 +19,6 @@ const Categories = ({ genres }: any) => {
       }
     },
     onSuccess: (data) => {
-      console.log(data);
       queryClient.setQueryData(["blogs"], data);
     },
   });
@@ -24,7 +27,7 @@ const Categories = ({ genres }: any) => {
     <div className="text-slate-300  flex items-center gap-2 mb-6">
       <h3 className="font-inter">Guides</h3>
       <ul className="flex gap-3 font-jet text-base">
-        {genres.map((item: any) => (
+        {genres.map((item: string) => (
           <li key={item}>
             <Link to={`/${item}`}>
               <Button
@@ -33,7 +36,7 @@ const Categories = ({ genres }: any) => {
                   border: "1px solid rgb(58, 80, 252)",
                   borderRadius: "8px",
                   boxShadow:
-                    "rgba(58, 80, 252, 0.404) 0px 0px 0px 0px, rgba(58, 80, 252, 0.365) 0px 0px 0px 0px, rgba(58, 80, 252, 0.18) 0px 0px 0px 0px;",
+                    "rgba(58, 80, 252, 0.404) 0px 0px 0px 0px, rgba(58, 80, 252, 0.365) 0px 0px 0px 0px, rgba(58, 80, 252, 0.18) 0px 0px 0px 0px", // Không có dấu chấm phẩy ở cuối
                 }}
               >
                 {item}

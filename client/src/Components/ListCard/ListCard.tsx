@@ -1,22 +1,30 @@
-import React from "react";
+import { memo } from "react";
 import { Card } from "../Card/Card";
-import Blog from "../../types/blog.type";
-import { Link } from "react-router-dom";
 
-const ListCard = ({ data }: any) => {
+import { Link } from "react-router-dom";
+import BlogPost from "../../types/blog.type";
+import LazyLoad from "react-lazyload";
+
+interface Props {
+  data: BlogPost[];
+}
+
+const ListCard = ({ data }: Props) => {
   return (
-    <div className="container mx-auto px-4">
-      <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {data?.map((item: Blog) => (
-          <li key={item._id}>
-            <Link to={`/detail/${item._id}`}>
-              <Card data={item}></Card>
-            </Link>
-          </li>
+    <div className="container mx-auto lg:px-4 px-2">
+      <ul className="grid lg:grid-cols-4 grid-cols-1 lg:gap-10 md:grid-cols-2 gap-4 md:gap-5">
+        {data?.map((item: BlogPost) => (
+          <LazyLoad key={item._id}>
+            <li>
+              <Link to={`/detail/${item._id}`}>
+                <Card data={item}></Card>
+              </Link>
+            </li>
+          </LazyLoad>
         ))}
       </ul>
     </div>
   );
 };
 
-export default ListCard;
+export default memo(ListCard);

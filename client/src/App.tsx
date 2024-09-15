@@ -10,8 +10,6 @@ export default function App() {
 
   const dispatch = useDispatch();
 
-  console.log("render");
-
   const { data } = useQuery({
     queryKey: ["user"],
     queryFn: () => getUser(),

@@ -1,8 +1,12 @@
 import axios from "axios";
 import instance from "./interceptor";
+import User from "../types/user.type";
 const urlLogin = "http://localhost:3000/login";
 const urlSignup = "http://localhost:3000/signup";
-const login = async (email: string, password: string): Promise<any> => {
+const login = async (
+  email: string,
+  password: string
+): Promise<User | undefined> => {
   console.log(email, password);
 
   try {
@@ -20,7 +24,7 @@ const register = async (
   email: string,
   password: string,
   name: string
-): Promise<any> => {
+): Promise<User | undefined> => {
   console.log(email, password);
 
   try {
@@ -37,7 +41,7 @@ const register = async (
 
 const urlGetUser = "http://localhost:3000/getUser";
 
-const getUser = async (): Promise<any> => {
+const getUser = async (): Promise<User | undefined> => {
   try {
     const res = await instance.get(urlGetUser);
     return res.data;
@@ -65,18 +69,19 @@ const getUserFromLocal = () => {
 
 const urlRefreshToken = "http://localhost:3000/refresh-token";
 
-const refreshAccessToken = async (refresh_token: string): Promise<any> => {
+const refreshAccessToken = async (refresh_token: string) => {
   try {
     const res = await axios.post(urlRefreshToken, {
       refresh_token: refresh_token,
     });
+    console.log(res);
     return res.data;
   } catch (error) {
     console.log(error);
   }
 };
 
-const updateUser = async (user: any) => {
+const updateUser = async (user: string) => {
   console.log(user);
   try {
     const res = await instance.put("http://localhost:3000/update-user", user);
@@ -87,7 +92,7 @@ const updateUser = async (user: any) => {
   }
 };
 
-const bookmark = async (blogId: any) => {
+const bookmark = async (blogId: string | undefined) => {
   try {
     const res = await instance.put("http://localhost:3000/saveBlog", {
       _id: blogId,
@@ -98,7 +103,7 @@ const bookmark = async (blogId: any) => {
   }
 };
 
-const likeBlog = async (blogId: any) => {
+const likeBlog = async (blogId: string) => {
   try {
     const res = await instance.put("http://localhost:3000/likeBlog", {
       _id: blogId,

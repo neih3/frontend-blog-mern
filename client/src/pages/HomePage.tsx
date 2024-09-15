@@ -10,8 +10,10 @@ import { useEffect, useMemo } from "react";
 
 export const HomePage = () => {
   const genres = useSelector((state: RootState) => state.blog.genres);
-  const dispatch = useDispatch();
+  const user = useSelector((state: RootState) => state.user.user);
 
+  const dispatch = useDispatch();
+  console.log("homepage render");
   const { data, isLoading, error } = useQuery({
     queryKey: ["blogs"],
     queryFn: () => getAllBlog(),
@@ -35,7 +37,7 @@ export const HomePage = () => {
   return (
     <div>
       <Header></Header>
-      <div className="pt-16 px-48">
+      <div className="lg:pt-16 lg:px-20 pt-10 px-2">
         <Categories genres={genres}></Categories>
         {isLoading ? <h3>Loading ...</h3> : <ListCard data={data}></ListCard>}
       </div>

@@ -56,7 +56,7 @@ const EditComponent = ({
         }}
       />
 
-      <div className="w-full md:w-1/3 md:mb-7">
+      <div className="w-full w-1/3 mb-7">
         <label className="block uppercase tracking-wide text-white text-xs font-bold mb-2">
           Thể loại
         </label>

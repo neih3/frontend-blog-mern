@@ -33,7 +33,7 @@ instance.interceptors.response.use(
     return response;
   },
   async (error) => {
-    console.log("error", error.status);
+    // console.log("error", error.status);
     const originalRequest = error.config;
     if (error.status == 401) {
       originalRequest._retry = true;
@@ -44,7 +44,7 @@ instance.interceptors.response.use(
         // console.log(accessToken);
         localStorage.setItem("accessToken", accessToken);
         originalRequest.headers.Authorization = `Bearer ${accessToken}`;
-        console.log(originalRequest);
+        // console.log(originalRequest);
         return axios(originalRequest);
       } catch (err) {
         // Xử lý lỗi khi làm mới token

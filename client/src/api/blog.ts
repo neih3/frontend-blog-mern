@@ -1,6 +1,8 @@
 import axios from "axios";
 import instance from "./interceptor";
 
+import BlogPost from "../types/blog.type";
+
 const urlblog = "http://localhost:3000/v1/blog";
 
 const createBlog = async (
@@ -9,7 +11,7 @@ const createBlog = async (
   content: string,
   genres: string,
   user: string
-): Promise<any> => {
+): Promise<BlogPost | undefined> => {
   try {
     const res = await axios.post(urlblog, {
       title: title,
@@ -32,7 +34,7 @@ const updateBlog = async (
   genres: string,
   user: string,
   id: string
-): Promise<any> => {
+): Promise<BlogPost | undefined> => {
   try {
     const res = await instance.put(`${urlblog}/${id}`, {
       title: title,
@@ -76,7 +78,7 @@ const getBlogbyGenre = async (genre: string) => {
   }
 };
 
-const cloudinaryUpload = async (file: any) => {
+const cloudinaryUpload = async (file: FormData) => {
   try {
     const res = await axios.post(
       "http://localhost:3000/v1/blog/upload-image",

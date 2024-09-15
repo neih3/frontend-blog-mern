@@ -1,19 +1,20 @@
-import React from "react";
+import React, { memo } from "react";
 import Button from "../Button/Button";
-import { Link, redirect } from "react-router-dom";
+import { Link } from "react-router-dom";
 
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { RootState } from "../../store";
-import { logout } from "../../reducers/user.reducer";
+
 import Dropdown from "../Dropdown/Dropdown";
 
 const Header = () => {
+  console.log("header render");
   const isAuthenticated = useSelector(
     (state: RootState) => state.user.isAuthenticated
   );
 
   return (
-    <div className="flex justify-between py-4 px-48 font-jet border-b items-center">
+    <div className="flex justify-between lg:py-4 lg:px-28 px-2 py-4   font-jet border-b items-center">
       <Link to="/">
         {" "}
         <div className="text-[white] flex">
@@ -30,34 +31,6 @@ const Header = () => {
         </div>
       </Link>
       {isAuthenticated ? (
-        // <div className="flex gap-3 capitalize">
-        //   <Link to="/editBlog">
-        //     <Button>Create Blog</Button>
-        //   </Link>
-
-        //   <Button
-        //     style={{ background: "#3A50FC" }}
-        //     onClick={() => {
-        //       dispatch(logout());
-        //     }}
-        //   >
-        //     Log out{" "}
-        //     <svg
-        //       xmlns="http://www.w3.org/2000/svg"
-        //       fill="none"
-        //       viewBox="0 0 24 24"
-        //       strokeWidth="1.5"
-        //       stroke="currentColor"
-        //       className="size-5"
-        //     >
-        //       <path
-        //         strokeLinecap="round"
-        //         strokeLinejoin="round"
-        //         d="M17.25 8.25 21 12m0 0-3.75 3.75M21 12H3"
-        //       />
-        //     </svg>
-        //   </Button>
-        // </div>
         <Dropdown></Dropdown>
       ) : (
         <div className="flex gap-3 capitalize">
@@ -89,4 +62,4 @@ const Header = () => {
   );
 };
 
-export default Header;
+export default memo(Header);

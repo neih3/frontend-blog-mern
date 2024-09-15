@@ -3,7 +3,7 @@ import { useState } from "react";
 import { login } from "../api/auth";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { checkIsAuthenticated } from "../reducers/user.reducer";
+import { addUser, checkIsAuthenticated } from "../reducers/user.reducer";
 
 export const LoginPage = () => {
   const dispatch = useDispatch();
@@ -18,13 +18,15 @@ export const LoginPage = () => {
   const loginMutation = useMutation({
     mutationFn: async ({ email, password }: any) =>
       await login(email, password),
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       console.log(data);
       if (data && data.user && data.accessToken && data.refreshToken) {
-        queryClient.setQueryData(["user"], data);
-        dispatch(checkIsAuthenticated(true));
+        queryClient.invalidateQueries({ queryKey: ["user"] });
+        await dispatch(checkIsAuthenticated(true));
+        await dispatch(addUser(data));
         localStorage.setItem("access_token", data.accessToken);
         localStorage.setItem("refresh_token", data.refreshToken);
+
         navigate("/");
       }
     },

@@ -21,9 +21,8 @@ const RegisterPage = () => {
       await register(email, password, name),
     onSuccess: (data) => {
       if (data && data.user && data.accessToken && data.refreshToken) {
-        queryClient.setQueryData(["User"], data);
+        queryClient.setQueryData(["user"], data);
         dispatch(checkIsAuthenticated(true));
-        localStorage.setItem("user", JSON.stringify(data.user));
         localStorage.setItem("access_token", data.accessToken);
         localStorage.setItem("refresh_token", data.refreshToken);
         navigate("/");

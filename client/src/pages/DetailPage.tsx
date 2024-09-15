@@ -7,24 +7,34 @@ import { bookmark, likeBlog } from "../api/auth";
 import Header from "../Components/Header/Header";
 import { RootState } from "../store";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import PostComment from "../Components/PostComment/PostComment";
+import Comments from "../Components/Comment/Comment";
+import { formatDate } from "../utils/utils";
+import BlogPost from "../types/blog.type";
+import CommentInterface from "../types/comment.type";
+import LazyLoad from "react-lazyload";
 
 const DetailPage = () => {
   const user = useSelector((state: RootState) => state.user.user);
-  const [blog, setBlog] = useState<any>(null);
+  console.log("user:", user);
+  const [blog, setBlog] = useState<BlogPost>();
+  const [comments, setComments] = useState<CommentInterface[]>([]); // Store comments locally
+
   const [isBookMark, setIsBookMark] = useState<boolean>(false);
   const [isLiked, setIsLiked] = useState<boolean>(false);
   const [likeCount, setLikeCount] = useState<number>(0);
   const [bookmarkCount, setBookMarkCount] = useState<number>(0);
-  console.log(bookmarkCount);
   const { id } = useParams();
   const queryClient = useQueryClient();
 
+  // Fetch the blog data
   useEffect(() => {
     async function fetchData() {
       if (id) {
         try {
           const response = await getABlog(id);
           setBlog(response);
+          setComments(response.comments || []); // Initialize comments locally
           setIsBookMark(response.userSavedBlogs?.includes(user._id) || false);
           setIsLiked(response.userLikesBlogs?.includes(user._id) || false);
           setLikeCount(response.userLikesBlogs?.length || 0);
@@ -38,9 +48,9 @@ const DetailPage = () => {
   }, [id, user._id]);
 
   const likeBlogMutation = useMutation({
-    mutationFn: async ({ id }: any) => await likeBlog(id),
+    mutationFn: async () => await likeBlog(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["blogs"] });
+      queryClient.invalidateQueries({ queryKey: ["blog", id] });
     },
     onError: (error) => {
       console.error("Error liking blog:", error);
@@ -48,42 +58,33 @@ const DetailPage = () => {
   });
 
   const saveBlogMutation = useMutation({
-    mutationFn: async ({ id }: any) => await bookmark(id),
+    mutationFn: async () => await bookmark(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["blogs"] });
+      queryClient.invalidateQueries({ queryKey: ["blog", id] });
     },
     onError: (error) => {
-      console.error("Error bookmarked blog:", error);
+      console.error("Error bookmarking blog:", error);
     },
   });
 
-  const handleBookmark = useCallback(async () => {
-    if (id) {
-      try {
-        await bookmark(id);
-        setIsBookMark((prevState) => !prevState);
-        setBookMarkCount((prevCount) =>
-          isBookMark ? prevCount - 1 : prevCount + 1
-        );
-        saveBlogMutation.mutate(id);
-      } catch (error) {
-        console.error("Lỗi khi đánh dấu:", error);
-      }
-    }
-  }, [id, saveBlogMutation, isBookMark]);
+  const handleBookmark = useCallback(() => {
+    saveBlogMutation.mutate();
+    setIsBookMark((prevState) => !prevState);
+    setBookMarkCount((prevCount) =>
+      isBookMark ? prevCount - 1 : prevCount + 1
+    );
+  }, [isBookMark, saveBlogMutation]);
 
-  const handleLike = useCallback(async () => {
-    if (id) {
-      try {
-        await likeBlog(id);
-        setIsLiked((prevState) => !prevState);
-        setLikeCount((prevCount) => (isLiked ? prevCount - 1 : prevCount + 1));
-        likeBlogMutation.mutate(id);
-      } catch (error) {
-        console.error("Lỗi khi thích:", error);
-      }
-    }
-  }, [id, likeBlogMutation, isLiked]);
+  const handleLike = useCallback(() => {
+    likeBlogMutation.mutate();
+    setIsLiked((prevState) => !prevState);
+    setLikeCount((prevCount) => (isLiked ? prevCount - 1 : prevCount + 1));
+  }, [isLiked, likeBlogMutation]);
+
+  // Function to add a new comment locally
+  const handleNewComment = (newComment: CommentInterface) => {
+    setComments((prevComments) => [...prevComments, newComment]); // Append new comment
+  };
 
   if (!blog) {
     return <div>Đang tải...</div>;
@@ -92,15 +93,12 @@ const DetailPage = () => {
   return (
     <div>
       <Header />
-      <div className="flex justify-center flex-col px-80 pt-10">
+      <div className="flex justify-center flex-col 2xl:px-80 md:px-40 lg:pt-10 px-2 mt-10 py-4">
         <div className="flex text-white mb-10 items-center justify-between">
-          {" "}
-          <h3 className="text-4xl text-left font-inter">{blog.title}</h3>{" "}
+          <h3 className="text-4xl text-left font-inter">{blog.title}</h3>
           <div className="flex gap-2 items-center">
             <div className="cursor-pointer" onClick={handleLike}>
-              {" "}
               <div className="group flex relative">
-                {" "}
                 <div className="flex items-center">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -119,15 +117,12 @@ const DetailPage = () => {
                   <span>{likeCount}</span>
                 </div>
                 <span className="group-hover:opacity-100 transition-opacity bg-gray-800 p-2 text-[12px] text-gray-100 rounded-md absolute left-1/2 -translate-x-1/2 translate-y-full opacity-0 mx-auto">
-                  {" "}
                   Like
-                </span>{" "}
-              </div>{" "}
-            </div>{" "}
+                </span>
+              </div>
+            </div>
             <div className="cursor-pointer" onClick={handleBookmark}>
-              {" "}
               <div className="group flex relative">
-                {" "}
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill={isBookMark ? "white" : "none"}
@@ -136,20 +131,18 @@ const DetailPage = () => {
                   stroke="currentColor"
                   className="size-5"
                 >
-                  {" "}
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
                     d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0Z"
-                  />{" "}
-                </svg>{" "}
+                  />
+                </svg>
                 <span>{bookmarkCount}</span>
                 <span className="group-hover:opacity-100 transition-opacity bg-gray-800 p-2 text-[12px] text-gray-100 rounded-md absolute left-1/2 -translate-x-1/2 translate-y-full opacity-0 mx-auto">
-                  {" "}
-                  Bookmark{" "}
-                </span>{" "}
-              </div>{" "}
-            </div>{" "}
+                  Bookmark
+                </span>
+              </div>
+            </div>
             <Link to={`/updateBlog/${id}`}>
               {" "}
               <div className="cursor-pointer">
@@ -178,14 +171,17 @@ const DetailPage = () => {
               </div>{" "}
             </Link>
           </div>
-        </div>{" "}
+        </div>
         <div className="flex justify-between mb-8">
           {" "}
           <div className="flex items-center gap-3">
             {" "}
             <img
               className="inline-block h-8 w-8 rounded-full ring-2 ring-white"
-              src="https://images.unsplash.com/photo-1491528323818-fdd1faba62cc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+              src={
+                user.avatar ||
+                "https://images.unsplash.com/photo-1491528323818-fdd1faba62cc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+              }
               alt=""
             />{" "}
             <span className="text-[#fffffff2] font-spe text-xl">
@@ -193,13 +189,21 @@ const DetailPage = () => {
               {blog.user?.name}{" "}
             </span>{" "}
           </div>{" "}
-          <span className="text-[#fffffff2] font-spe">Nov 30, 2023</span>{" "}
+          <span className="text-[#fffffff2] font-spe">
+            {formatDate(blog.createdAt)}
+          </span>{" "}
         </div>{" "}
         <MarkdownEditor.Markdown
           className="font-spe"
           style={{ padding: "40px" }}
-          source={blog.content}
+          source={blog.content || undefined}
         />
+        <PostComment
+          user={user._id}
+          blog={id}
+          onNewComment={handleNewComment}
+        />
+        <Comments comments={comments} setComments={setComments} user={user} />
       </div>
     </div>
   );
