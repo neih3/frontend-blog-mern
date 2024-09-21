@@ -7,10 +7,9 @@ import User from "../../types/user.type";
 interface Props {
   comments: CommentInterface[];
   user: User;
-  setComments: React.Dispatch<React.SetStateAction<Comment[]>>;
 }
 
-const Comments = ({ comments, user, setComments }: Props) => {
+const Comments = ({ comments, user }: Props) => {
   // Check if comments exist and is an array
   if (!comments || comments.length === 0) {
     return (
@@ -21,12 +20,7 @@ const Comments = ({ comments, user, setComments }: Props) => {
   return (
     <div>
       {comments.map((item: Comment, index: number) => (
-        <CommentItem
-          key={index}
-          setComments={setComments}
-          comment={item}
-          user={user}
-        />
+        <CommentItem key={index} comment={item} user={user} />
       ))}
     </div>
   );

@@ -61,6 +61,7 @@ const getAllBlog = async () => {
 
 const getABlog = async (id: string) => {
   try {
+    console.log("id get blog nhận được", id);
     const res = await axios.get(`${urlblog}/${id}`);
     return res.data;
   } catch (error) {

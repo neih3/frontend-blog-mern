@@ -1,19 +1,23 @@
 import React, { useState, memo } from "react";
 import { createComment } from "../../api/comment";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-const PostComment = ({ user, blog, onNewComment }: any) => {
+const PostComment = ({ user, blog }: any) => {
   const [comment, setComment] = useState<string>("");
   console.log("Pos comment render");
+  const queryClient = useQueryClient();
+
   const addCommentMutation = useMutation({
     mutationFn: async ({ user, content, blog }: any) => {
       // Giả sử `createComment` là hàm gọi API để tạo bình luận mới
       return await createComment(user, content, blog);
     },
-    onSuccess: (newComment) => {
+    onSuccess: () => {
       // Invalidate the query for "blogs" to refresh the data
-      onNewComment(newComment);
+
+      queryClient.invalidateQueries({ queryKey: ["blog"] });
     },
+
     onError: (error) => {
       console.error("Error posting comment:", error);
     },
@@ -47,7 +51,7 @@ const PostComment = ({ user, blog, onNewComment }: any) => {
               onChange={(e) => setComment(e.target.value)}
               value={comment}
               id="comment"
-              rows="4"
+              rows={4}
               className="w-full px-0 text-sm text-gray-900 bg-white border-0 dark:bg-gray-800 focus:ring-0 dark:text-white dark:placeholder-gray-400"
               placeholder="Write a comment..."
               required

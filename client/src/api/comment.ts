@@ -32,6 +32,16 @@ const updateComment = async (id: unknown, content: string): Promise<any> => {
   }
 };
 
+const deleteCommentApi = async (id: unknown): Promise<any> => {
+  try {
+    console.log(id);
+    const res = await instance.delete(`${urlComment}/${id}`);
+    return res.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 const getAllComment = async (id: string) => {
   try {
     const res = await instance.get(`urlblog${id}`);
@@ -42,4 +52,4 @@ const getAllComment = async (id: string) => {
   }
 };
 
-export { createComment, getAllComment, updateComment };
+export { createComment, getAllComment, updateComment, deleteCommentApi };

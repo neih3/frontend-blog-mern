@@ -6,19 +6,13 @@ import { getABlog } from "../api/blog";
 import { bookmark, likeBlog } from "../api/auth";
 import Header from "../Components/Header/Header";
 import { RootState } from "../store";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import PostComment from "../Components/PostComment/PostComment";
 import Comments from "../Components/Comment/Comment";
 import { formatDate } from "../utils/utils";
-import BlogPost from "../types/blog.type";
-import CommentInterface from "../types/comment.type";
-import LazyLoad from "react-lazyload";
 
 const DetailPage = () => {
   const user = useSelector((state: RootState) => state.user.user);
-  console.log("user:", user);
-  const [blog, setBlog] = useState<BlogPost>();
-  const [comments, setComments] = useState<CommentInterface[]>([]); // Store comments locally
 
   const [isBookMark, setIsBookMark] = useState<boolean>(false);
   const [isLiked, setIsLiked] = useState<boolean>(false);
@@ -26,26 +20,13 @@ const DetailPage = () => {
   const [bookmarkCount, setBookMarkCount] = useState<number>(0);
   const { id } = useParams();
   const queryClient = useQueryClient();
-
-  // Fetch the blog data
-  useEffect(() => {
-    async function fetchData() {
-      if (id) {
-        try {
-          const response = await getABlog(id);
-          setBlog(response);
-          setComments(response.comments || []); // Initialize comments locally
-          setIsBookMark(response.userSavedBlogs?.includes(user._id) || false);
-          setIsLiked(response.userLikesBlogs?.includes(user._id) || false);
-          setLikeCount(response.userLikesBlogs?.length || 0);
-          setBookMarkCount(response.userSavedBlogs?.length || 0);
-        } catch (error) {
-          console.error("Lỗi khi lấy dữ liệu blog:", error);
-        }
-      }
-    }
-    fetchData();
-  }, [id, user._id]);
+  console.log(id);
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["blog", id],
+    queryFn: async () => await getABlog(id),
+    staleTime: 5 * 60 * 1000, // 5 minutes
+  });
+  console.log(data);
 
   const likeBlogMutation = useMutation({
     mutationFn: async () => await likeBlog(id),
@@ -82,11 +63,8 @@ const DetailPage = () => {
   }, [isLiked, likeBlogMutation]);
 
   // Function to add a new comment locally
-  const handleNewComment = (newComment: CommentInterface) => {
-    setComments((prevComments) => [...prevComments, newComment]); // Append new comment
-  };
 
-  if (!blog) {
+  if (!data) {
     return <div>Đang tải...</div>;
   }
 
@@ -95,14 +73,18 @@ const DetailPage = () => {
       <Header />
       <div className="flex justify-center flex-col 2xl:px-80 md:px-40 lg:pt-10 px-2 mt-10 py-4">
         <div className="flex text-white mb-10 items-center justify-between">
-          <h3 className="text-4xl text-left font-inter">{blog.title}</h3>
+          <h3 className="text-4xl text-left font-inter">{data.title}</h3>
           <div className="flex gap-2 items-center">
             <div className="cursor-pointer" onClick={handleLike}>
               <div className="group flex relative">
                 <div className="flex items-center">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    fill={isLiked ? "white" : "none"}
+                    fill={
+                      data.userLikesBlogs?.includes(user._id) || false
+                        ? "white"
+                        : "none"
+                    }
                     viewBox="0 0 24 24"
                     strokeWidth="1.5"
                     stroke="currentColor"
@@ -114,7 +96,7 @@ const DetailPage = () => {
                       d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"
                     />
                   </svg>
-                  <span>{likeCount}</span>
+                  <span>{data.userLikesBlogs?.length || 0}</span>
                 </div>
                 <span className="group-hover:opacity-100 transition-opacity bg-gray-800 p-2 text-[12px] text-gray-100 rounded-md absolute left-1/2 -translate-x-1/2 translate-y-full opacity-0 mx-auto">
                   Like
@@ -125,7 +107,11 @@ const DetailPage = () => {
               <div className="group flex relative">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  fill={isBookMark ? "white" : "none"}
+                  fill={
+                    data.userSavedBlogs?.includes(user._id) || false
+                      ? "white"
+                      : "none"
+                  }
                   viewBox="0 0 24 24"
                   strokeWidth="1.5"
                   stroke="currentColor"
@@ -137,7 +123,7 @@ const DetailPage = () => {
                     d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0Z"
                   />
                 </svg>
-                <span>{bookmarkCount}</span>
+                <span>{data.userSavedBlogs?.length || 0}</span>
                 <span className="group-hover:opacity-100 transition-opacity bg-gray-800 p-2 text-[12px] text-gray-100 rounded-md absolute left-1/2 -translate-x-1/2 translate-y-full opacity-0 mx-auto">
                   Bookmark
                 </span>
@@ -186,24 +172,20 @@ const DetailPage = () => {
             />{" "}
             <span className="text-[#fffffff2] font-spe text-xl">
               {" "}
-              {blog.user?.name}{" "}
+              {data.user?.name}{" "}
             </span>{" "}
           </div>{" "}
           <span className="text-[#fffffff2] font-spe">
-            {formatDate(blog.createdAt)}
+            {formatDate(data.createdAt)}
           </span>{" "}
         </div>{" "}
         <MarkdownEditor.Markdown
           className="font-spe"
           style={{ padding: "40px" }}
-          source={blog.content || undefined}
+          source={data.content || undefined}
         />
-        <PostComment
-          user={user._id}
-          blog={id}
-          onNewComment={handleNewComment}
-        />
-        <Comments comments={comments} setComments={setComments} user={user} />
+        <PostComment user={user._id} blog={id} />
+        <Comments comments={data.comments} user={user} />
       </div>
     </div>
   );
