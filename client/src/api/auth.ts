@@ -20,6 +20,35 @@ const login = async (
   }
 };
 
+const sendLinkEmail = async (email: string): Promise<any> => {
+  console.log(email);
+
+  try {
+    const res = await axios.post("http://localhost:3000/password-reset", {
+      email: email,
+    });
+    console.log(res.data);
+    return res.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const resetPassword = async (token: string, password: string) => {
+  try {
+    const res = await axios.post(
+      `http://localhost:3000/password-reset/${token}`,
+      {
+        password: password,
+      }
+    );
+    console.log(res.data);
+    return res.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 const register = async (
   email: string,
   password: string,
@@ -120,6 +149,28 @@ const clearLocalStorage = () => {
   localStorage.removeItem("user");
 };
 
+const getAllUsers = async () => {
+  try {
+    const res = await instance.get("http://localhost:3000/admin/getAllUsers");
+    console.log(res.data);
+    return res.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const deleteUser = async (id: string) => {
+  try {
+    const res = await instance.delete(
+      `http://localhost:3000/admin/deleteUser/${id}`
+    );
+    console.log(res.data);
+    return res.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export {
   login,
   register,
@@ -132,4 +183,8 @@ export {
   updateUser,
   bookmark,
   likeBlog,
+  sendLinkEmail,
+  resetPassword,
+  getAllUsers,
+  deleteUser,
 };

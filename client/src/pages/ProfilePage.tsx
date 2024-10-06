@@ -1,25 +1,24 @@
 import { Button } from "@headlessui/react";
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import ListCard from "../Components/ListCard/ListCard";
 import { useQuery } from "@tanstack/react-query";
-import { getAllBlog } from "../api/blog";
+import { getAllBlog, getBlogsBookMark } from "../api/blog";
 import Modal from "../Components/Modal/Modal";
 import { useSelector } from "react-redux";
 import { RootState } from "../store";
 import { Link } from "react-router-dom";
 
 const ProfilePage = () => {
-  const [open, setOpen] = useState<any>(false);
+  const [open, setOpen] = useState<boolean>(false);
+  const [select, setSelect] = useState("My blog");
 
   const user = useSelector((state: RootState) => state.user.user);
 
-  console.log("profile render");
-
-  // Fetching all blogs
+  // Fetch dữ liệu blog dựa trên giá trị của 'select'
   const { data } = useQuery({
-    queryKey: ["blogs"],
-    queryFn: () => getAllBlog(),
-    staleTime: 5 * 60 * 1000, // 5 minutes
+    queryKey: ["blogs", select], // 'select' là phần phụ thuộc để queryKey thay đổi mỗi khi select thay đổi
+    queryFn: () => (select === "My blog" ? getAllBlog() : getBlogsBookMark()),
+    staleTime: 5 * 60 * 1000, // 5 phút
   });
 
   // Memoize user info to avoid unnecessary re-renders
@@ -76,7 +75,27 @@ const ProfilePage = () => {
         <div className="w-full">
           {/* navbar */}
           <nav className="text-gray-50 bg-[#1C1C1C] flex justify-between  p-5 mb-8">
-            <h3>My Blogs</h3>
+            <div className="relative">
+              <select
+                onChange={(e) => setSelect(e.currentTarget.value)}
+                className="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                id="grid-state"
+              >
+                {" "}
+                <option value="My blog">My blog</option>
+                <option value="My bookmark">My bookmark</option>
+              </select>
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                <svg
+                  className="fill-current h-4 w-4"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                >
+                  <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                </svg>
+              </div>
+            </div>
+
             <Button className="bg-white text-black px-2 rounded py-1 flex items-center gap-1">
               <Link to="/editBlog">New Blog</Link>
               <svg

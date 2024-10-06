@@ -9,6 +9,10 @@ import { RootState } from "../store";
 import DetailPage from "../pages/DetailPage";
 import ProfilePage from "../pages/ProfilePage";
 import UpdatePage from "../pages/UpdatePage";
+import ForgetPassword from "../pages/ForgetPassword";
+import ResetPassword from "../pages/ResetPassword";
+import Dashboard from "../pages/Dashboard";
+import EditDashBoard from "../pages/EditDashBoard";
 
 function ProtectedRoute() {
   // Capitalized the component name
@@ -31,6 +35,22 @@ function useRouterElement() {
     {
       path: "/",
       element: <HomePage />,
+    },
+    {
+      path: "/dashboard",
+      element: <Dashboard />,
+    },
+    {
+      path: "/dashboard/user/:id",
+      element: <EditDashBoard />,
+    },
+    {
+      path: "forgot-password",
+      element: <ForgetPassword />,
+    },
+    {
+      path: "/password-reset/:token",
+      element: <ResetPassword />,
     },
     {
       path: "/detail/:id",

@@ -62,10 +62,13 @@ const DetailPage = () => {
     setLikeCount((prevCount) => (isLiked ? prevCount - 1 : prevCount + 1));
   }, [isLiked, likeBlogMutation]);
 
-  // Function to add a new comment locally
-
-  if (!data) {
+  // Xử lý trạng thái đang tải và lỗi
+  if (isLoading) {
     return <div>Đang tải...</div>;
+  }
+
+  if (error) {
+    return <div>Có lỗi xảy ra khi tải bài viết!</div>;
   }
 
   return (

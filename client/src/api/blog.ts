@@ -92,6 +92,16 @@ const cloudinaryUpload = async (file: FormData) => {
   }
 };
 
+const getBlogsBookMark = async () => {
+  try {
+    const res = await instance.get("http://localhost:3000/v1/blog/bookmark");
+    console.log(res.data);
+    return res.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export {
   createBlog,
   getAllBlog,
@@ -99,4 +109,5 @@ export {
   getBlogbyGenre,
   cloudinaryUpload,
   updateBlog,
+  getBlogsBookMark,
 };

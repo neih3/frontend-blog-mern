@@ -39,7 +39,7 @@ instance.interceptors.response.use(
       originalRequest._retry = true;
       try {
         const refreshToken = getRefreshTokenFromLocal();
-
+        console.log(refreshToken);
         const { accessToken } = await refreshAccessToken(refreshToken);
         // console.log(accessToken);
         localStorage.setItem("accessToken", accessToken);
