@@ -4,7 +4,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { getABlog, updateBlog } from "../api/blog";
 import { useSelector } from "react-redux";
 import { RootState } from "../store";
-import EditComponent from "../Components/EditComponent/EditComponent";
+import EditComponent from "./EditPage/EditComponent";
 
 const UpdatePage = () => {
   const user = useSelector((state: RootState) => state.user.user);

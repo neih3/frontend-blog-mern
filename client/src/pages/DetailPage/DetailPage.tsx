@@ -2,14 +2,14 @@ import React, { useEffect, useState, useCallback } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import MarkdownEditor from "@uiw/react-markdown-editor";
-import { getABlog } from "../api/blog";
-import { bookmark, likeBlog } from "../api/auth";
-import Header from "../Components/Header/Header";
-import { RootState } from "../store";
+import { getABlog } from "../../api/blog";
+import { bookmark, likeBlog } from "../../api/auth";
+import Header from "../../Components/Header/Header";
+import { RootState } from "../../store";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import PostComment from "../Components/PostComment/PostComment";
-import Comments from "../Components/Comment/Comment";
-import { formatDate } from "../utils/utils";
+import PostComment from "./PostComment";
+import { formatDate } from "../../utils/utils";
+import Comments from "./Comments";
 
 const DetailPage = () => {
   const user = useSelector((state: RootState) => state.user.user);

@@ -1,8 +1,8 @@
-import React, { memo } from "react";
-import CommentItem from "../CommentItem/CommentItem"; // Import the CommentItem component
+import { memo } from "react";
 import Comment from "../../types/comment.type";
 import CommentInterface from "../../types/comment.type";
 import User from "../../types/user.type";
+import CommentItem from "./CommentItem";
 
 interface Props {
   comments: CommentInterface[];

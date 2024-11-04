@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createBlog } from "../api/blog";
 import { useSelector } from "react-redux";
-import { RootState } from "../store";
-import EditComponent from "../Components/EditComponent/EditComponent";
+import { RootState } from "../../store";
+import { createBlog } from "../../api/blog";
+import EditComponent from "./EditComponent";
 
 const EditPage = () => {
   const user = useSelector((state: RootState) => state.user.user);

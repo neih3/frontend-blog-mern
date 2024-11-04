@@ -10,24 +10,30 @@ import { useEffect, useMemo } from "react";
 
 export const HomePage = () => {
   const genres = useSelector((state: RootState) => state.blog.genres);
-  const user = useSelector((state: RootState) => state.user.user);
 
   const dispatch = useDispatch();
-  console.log("homepage render");
-  const { data, isLoading, error } = useQuery({
+
+  // Fetching blogs
+  const {
+    data: blogs,
+    isLoading: blogsLoading,
+    error: blogsError,
+  } = useQuery({
     queryKey: ["blogs"],
     queryFn: () => getAllBlog(),
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
 
+  // Memoize unique genres
   const uniqueGenres = useMemo(() => {
-    if (!data) return [];
+    if (!blogs) return [];
     return [
       "All",
-      ...new Set(data.flatMap((blog: { genres: unknown }) => blog.genres)),
+      ...new Set(blogs.flatMap((blog: { genres: unknown }) => blog.genres)),
     ];
-  }, [data]);
+  }, [blogs]);
 
+  // Dispatch genres when unique genres are ready
   useEffect(() => {
     if (uniqueGenres.length > 1 && genres.length === 0) {
       dispatch(addGenres(uniqueGenres));
@@ -36,10 +42,16 @@ export const HomePage = () => {
 
   return (
     <div>
-      <Header></Header>
+      <Header />
       <div className="lg:pt-16 lg:px-20 pt-10 px-2">
-        <Categories genres={genres}></Categories>
-        {isLoading ? <h3>Loading ...</h3> : <ListCard data={data}></ListCard>}
+        <Categories genres={genres} />
+        {blogsLoading ? (
+          <h3>Loading blogs...</h3>
+        ) : blogsError ? (
+          <h3>Error loading blogs</h3>
+        ) : (
+          <ListCard data={blogs} />
+        )}
       </div>
     </div>
   );
