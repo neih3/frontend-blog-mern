@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
-import { sendLinkEmail } from "../api/auth";
-import ToastMessage from "../Components/ToastMessage/ToastMessage"; // Giả sử bạn có một component ToastMessage
+import { useState, useEffect } from "react";
+import { sendLinkEmail } from "../../api/auth";
+import ToastMessage from "../../Components/ToastMessage/ToastMessage"; // Giả sử bạn có một component ToastMessage
 import { useFormik } from "formik";
 import * as Yup from "yup";
 const ForgetPassword = () => {
@@ -48,11 +48,6 @@ const ForgetPassword = () => {
       {/* Hiện Toast nếu showToast true */}
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm text-[white]">
-          <img
-            alt="Your Company"
-            src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-            className="mx-auto h-10 w-auto"
-          />
           <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight ">
             Reset Password
           </h2>

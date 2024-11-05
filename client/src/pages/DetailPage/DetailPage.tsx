@@ -1,5 +1,5 @@
-import React, { useEffect, useState, useCallback } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useCallback } from "react";
+import { Link, useLocation, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import MarkdownEditor from "@uiw/react-markdown-editor";
 import { getABlog } from "../../api/blog";
@@ -14,13 +14,11 @@ import Comments from "./Comments";
 const DetailPage = () => {
   const user = useSelector((state: RootState) => state.user.user);
 
-  const [isBookMark, setIsBookMark] = useState<boolean>(false);
-  const [isLiked, setIsLiked] = useState<boolean>(false);
-  const [likeCount, setLikeCount] = useState<number>(0);
-  const [bookmarkCount, setBookMarkCount] = useState<number>(0);
-  const { id } = useParams();
+  const location = useLocation();
+  const id = location.state?.blogId;
+
   const queryClient = useQueryClient();
-  console.log(id);
+
   const { data, isLoading, error } = useQuery({
     queryKey: ["blog", id],
     queryFn: async () => await getABlog(id),
@@ -50,17 +48,11 @@ const DetailPage = () => {
 
   const handleBookmark = useCallback(() => {
     saveBlogMutation.mutate();
-    setIsBookMark((prevState) => !prevState);
-    setBookMarkCount((prevCount) =>
-      isBookMark ? prevCount - 1 : prevCount + 1
-    );
-  }, [isBookMark, saveBlogMutation]);
+  }, [saveBlogMutation]);
 
   const handleLike = useCallback(() => {
     likeBlogMutation.mutate();
-    setIsLiked((prevState) => !prevState);
-    setLikeCount((prevCount) => (isLiked ? prevCount - 1 : prevCount + 1));
-  }, [isLiked, likeBlogMutation]);
+  }, [likeBlogMutation]);
 
   // Xử lý trạng thái đang tải và lỗi
   if (isLoading) {

@@ -1,25 +1,52 @@
 import { Button } from "@headlessui/react";
-import React, { useState, useMemo, useEffect } from "react";
-import ListCard from "../Components/ListCard/ListCard";
-import { useQuery } from "@tanstack/react-query";
-import { getAllBlog, getBlogsBookMark } from "../api/blog";
-import Modal from "../Components/Modal/Modal";
+import { useState, useMemo, useEffect } from "react";
+import ListCard from "../../Components/ListCard/ListCard";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { getAllBlog, getBlogsBookMark } from "../../api/blog";
+import Modal from "../../Components/Modal/Modal";
 import { useSelector } from "react-redux";
-import { RootState } from "../store";
+import { RootState } from "../../store";
 import { Link } from "react-router-dom";
+import { BounceLoader } from "react-spinners";
+import override from "../../commom/override";
 
 const ProfilePage = () => {
   const [open, setOpen] = useState<boolean>(false);
   const [select, setSelect] = useState("My blog");
 
+  console.log("render");
+  const queryClient = useQueryClient();
   const user = useSelector((state: RootState) => state.user.user);
 
   // Fetch dữ liệu blog dựa trên giá trị của 'select'
-  const { data } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ["blogs", select], // 'select' là phần phụ thuộc để queryKey thay đổi mỗi khi select thay đổi
     queryFn: () => (select === "My blog" ? getAllBlog() : getBlogsBookMark()),
     staleTime: 5 * 60 * 1000, // 5 phút
   });
+
+  const getMyBlogsMutation = useMutation({
+    mutationFn: async () => await getAllBlog(),
+    onSuccess: async (data) => {
+      queryClient.setQueriesData({ queryKey: ["blogs", "My blog"] }, data);
+    },
+  });
+
+  const getMyBookMarksMutation = useMutation({
+    mutationFn: async () => await getBlogsBookMark(),
+    onSuccess: async (data) => {
+      queryClient.setQueriesData({ queryKey: ["blogs", "My bookmark"] }, data);
+      return data;
+    },
+  });
+
+  useEffect(() => {
+    if (select === "My blog") {
+      getMyBlogsMutation.mutate();
+    } else {
+      getMyBookMarksMutation.mutate();
+    }
+  }, [select]);
 
   // Memoize user info to avoid unnecessary re-renders
   const userInfo = useMemo(
@@ -115,7 +142,20 @@ const ProfilePage = () => {
             </Button>
           </nav>
           {/* Use memoized blog data */}
-          <ListCard data={blogs}></ListCard>
+          {isLoading ? (
+            <div className="flex items-center justify-center w-full">
+              <BounceLoader
+                color="white"
+                loading={isLoading}
+                cssOverride={override}
+                size={300}
+                aria-label="Loading Spinner"
+                data-testid="loader"
+              />
+            </div>
+          ) : (
+            <ListCard data={blogs}></ListCard>
+          )}
         </div>
       </div>
     </>

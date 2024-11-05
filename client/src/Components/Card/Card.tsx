@@ -22,25 +22,25 @@ export const Card = ({ data }: Props) => {
 
   return (
     <>
-      <div className=" overflow-hidden border-gray-200 rounded-lg shadow dark:bg-gray-800 font-inter ">
-        <div className="mx-auto">
+      <div className="h-[500px] overflow-hidden border-gray-200 rounded-lg shadow dark:bg-gray-800 font-inter flex flex-col">
+        <div className="h-[250px] overflow-hidden flex items-center justify-center bg-gray-800">
           <LazyLoadImage
-            className="rounded-t-lg w-full h-full "
+            className="w-full h-[250px] object-contain"
             src={image || ""}
             alt={title || "Chưa có ảnh"}
           />
         </div>
 
-        <div className="px-6 py-4">
+        <div className="flex-1 px-6 py-4 flex flex-col justify-evenly">
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-3">
               <LazyLoadImage
-                className="inline-block h-6 w-6 rounded-full ring-2  ring-white"
+                className="inline-block h-6 w-6 rounded-full ring-2 ring-white object-cover"
                 src={
                   user?.avatar ||
                   "https://images.unsplash.com/photo-1491528323818-fdd1faba62cc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
                 }
-                alt={user?.name || ""} // Added alt text for accessibility>
+                alt={user?.name || ""}
               />
               <span className="text-[#fffffff2] font-spe text-xs">
                 {user?.name}
@@ -48,11 +48,12 @@ export const Card = ({ data }: Props) => {
             </div>
             <span className="text-[#fffffff2] text-xs">{timeAgo}</span>
           </div>
-          <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white mt-5">
+
+          <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white mt-5 line-clamp-2">
             {title}
           </h5>
 
-          <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
+          <p className="mb-3 font-normal text-gray-700 dark:text-gray-400 line-clamp-3">
             {truncatedContent}
           </p>
         </div>

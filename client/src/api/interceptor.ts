@@ -39,12 +39,12 @@ instance.interceptors.response.use(
       originalRequest._retry = true;
       try {
         const refreshToken = getRefreshTokenFromLocal();
-        console.log(refreshToken);
+        // console.log(refreshToken);
         const { accessToken } = await refreshAccessToken(refreshToken);
         // console.log(accessToken);
         localStorage.setItem("accessToken", accessToken);
         originalRequest.headers.Authorization = `Bearer ${accessToken}`;
-        // console.log(originalRequest);
+
         return axios(originalRequest);
       } catch (err) {
         // Xử lý lỗi khi làm mới token

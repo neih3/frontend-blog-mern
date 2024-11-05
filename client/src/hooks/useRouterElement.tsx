@@ -1,17 +1,19 @@
 import { Navigate, Outlet, useRoutes } from "react-router-dom";
 import { HomePage } from "../pages/HomePage";
-import { LoginPage } from "../pages/LoginPage";
-import RegisterPage from "../pages/RegisterPage";
+
+import RegisterPage from "../pages/Auth/RegisterPage";
 import { useSelector } from "react-redux";
 import { RootState } from "../store";
 import DetailPage from "../pages/DetailPage/DetailPage";
-import ProfilePage from "../pages/ProfilePage";
+import ProfilePage from "../pages/ProfilePage/ProfilePage";
 import UpdatePage from "../pages/UpdatePage";
-import ForgetPassword from "../pages/ForgetPassword";
-import ResetPassword from "../pages/ResetPassword";
+import ForgetPassword from "../pages/Auth/ForgetPassword";
+
 import Dashboard from "../pages/Dashboard";
 import EditDashBoard from "../pages/EditDashBoard";
 import EditPage from "../pages/EditPage/EditPage";
+import { LoginPage } from "../pages/Auth/LoginPage";
+import ResetPassword from "../pages/Auth/ResetPassword";
 
 function ProtectedRoute() {
   // Capitalized the component name

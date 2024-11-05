@@ -3,8 +3,20 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { checkIsAuthenticated } from "../reducers/user.reducer";
-import { login } from "../api/auth";
+import { login } from "../../api/auth";
+import { checkIsAuthenticated } from "../../reducers/user.reducer";
+import User from "../../types/user.type";
+
+interface DataType {
+  accessToken: string;
+  refreshToken: string;
+  user: User;
+}
+
+interface Params {
+  email: string;
+  password: string;
+}
 
 export const LoginPage = () => {
   const dispatch = useDispatch();
@@ -12,10 +24,10 @@ export const LoginPage = () => {
   const queryClient = useQueryClient();
 
   const loginMutation = useMutation({
-    mutationFn: async ({ email, password }: any) =>
+    mutationFn: async ({ email, password }: Params) =>
       await login(email, password),
-    onSuccess: async (data) => {
-      console.log(data);
+    onSuccess: async (data: DataType) => {
+      console.log("day la data", data);
       if (data && data.user && data.accessToken && data.refreshToken) {
         queryClient.invalidateQueries({ queryKey: ["user"] });
         dispatch(checkIsAuthenticated(true));

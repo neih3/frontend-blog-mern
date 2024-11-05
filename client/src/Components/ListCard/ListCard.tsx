@@ -16,7 +16,12 @@ const ListCard = ({ data }: Props) => {
         {data?.map((item: BlogPost) => (
           <LazyLoad key={item._id}>
             <li>
-              <Link to={`/detail/${item._id}`}>
+              <Link
+                to={`/detail/${item.title}`}
+                state={{
+                  blogId: item._id,
+                }}
+              >
                 <Card data={item}></Card>
               </Link>
             </li>

@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import { register } from "../api/auth";
+import { register } from "../../api/auth";
 import { Link, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
-import ToastMessage from "../Components/ToastMessage/ToastMessage";
+import ToastMessage from "../../Components/ToastMessage/ToastMessage";
 
 const RegisterPage = () => {
   const [message, setMessage] = useState("");

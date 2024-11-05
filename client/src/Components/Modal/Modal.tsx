@@ -1,12 +1,19 @@
 import { Dialog, DialogBackdrop, DialogPanel } from "@headlessui/react";
-import React, { useState } from "react";
+import { useState } from "react";
 import { cloudinaryUpload } from "../../api/blog";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { updateUser } from "../../api/auth";
 import { useDispatch } from "react-redux";
 import { addUser } from "../../reducers/user.reducer";
+import User from "../../types/user.type";
 
-const Modal = ({ open, setOpen, user }: any) => {
+interface Props {
+  open: boolean;
+  setOpen: (value: boolean) => void;
+  user: User;
+}
+
+const Modal = ({ open, setOpen, user }: Props) => {
   const dispatch = useDispatch();
 
   const [preAvatar, setPreAvatar] = useState<File | null>();
@@ -47,7 +54,7 @@ const Modal = ({ open, setOpen, user }: any) => {
   }
   return (
     <>
-      <Dialog open={open} onClose={setOpen} className="relative z-10">
+      <Dialog open={open} onClose={setOpen} className="relative top-30 z-10">
         <DialogBackdrop
           style={{ background: "rgba(0, 0, 0, 0.6)" }}
           transition
@@ -55,11 +62,11 @@ const Modal = ({ open, setOpen, user }: any) => {
         />
 
         <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
-          <div className="flex min-h-full lg:items-end justify-center p-4 text-center items-center sm:p-0">
+          <div className="flex min-h-full  justify-center p-4 text-center items-center sm:p-0">
             <DialogPanel
-              style={{ border: "1px solid rgba(255, 255, 255, 0.2)" }}
+              style={{ border: "1px solid " }}
               transition
-              className="relative  transform overflow-hidden rounded-lg  text-left shadow-xl transition-all data-[closed]:translate-y-4 data-[closed]:opacity-0 data-[enter]:duration-300 data-[leave]:duration-200 data-[enter]:ease-out data-[leave]:ease-in sm:my-8 sm:w-full sm:max-w-lg data-[closed]:sm:translate-y-0 data-[closed]:sm:scale-95"
+              className="relative bg-gray-800  transform overflow-hidden rounded-lg  text-left shadow-xl transition-all data-[closed]:translate-y-4 data-[closed]:opacity-0 data-[enter]:duration-300 data-[leave]:duration-200 data-[enter]:ease-out data-[leave]:ease-in sm:my-8 sm:w-full sm:max-w-lg data-[closed]:sm:translate-y-0 data-[closed]:sm:scale-95"
             >
               {/* Dialog Header */}
               <div
@@ -77,7 +84,7 @@ const Modal = ({ open, setOpen, user }: any) => {
                   viewBox="0 0 24 24"
                   strokeWidth="1.5"
                   stroke="currentColor"
-                  className="size-6"
+                  className="size-6 cursor-pointer"
                 >
                   <path
                     strokeLinecap="round"
@@ -138,6 +145,7 @@ const Modal = ({ open, setOpen, user }: any) => {
                   </label>
                   <input
                     type="file"
+                    className="text-white cursor-pointer"
                     onChange={(e) => {
                       if (e.target.files && e.target.files.length > 0) {
                         setPreAvatar(e.target.files[0]); // Lưu tệp đã chọn vào state
