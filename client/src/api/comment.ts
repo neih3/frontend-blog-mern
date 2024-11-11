@@ -1,4 +1,3 @@
-import axios from "axios";
 import instance from "./interceptor";
 
 const urlComment = "http://localhost:3000/v1/comment";

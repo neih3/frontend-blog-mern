@@ -9,11 +9,11 @@ import ProfilePage from "../pages/ProfilePage/ProfilePage";
 import UpdatePage from "../pages/UpdatePage";
 import ForgetPassword from "../pages/Auth/ForgetPassword";
 
-import Dashboard from "../pages/Dashboard";
 import EditDashBoard from "../pages/EditDashBoard";
 import EditPage from "../pages/EditPage/EditPage";
 import { LoginPage } from "../pages/Auth/LoginPage";
 import ResetPassword from "../pages/Auth/ResetPassword";
+import Dashboard from "../pages/DashBoard/Dashboard";
 
 function ProtectedRoute() {
   // Capitalized the component name
