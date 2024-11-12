@@ -19,6 +19,7 @@ const EditPage = () => {
   const queryClient = useQueryClient();
 
   const addBlogMutation = useMutation({
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     mutationFn: async ({ title, image, content, genres, user }: any) =>
       await createBlog(title, image, content, genres, user),
     onSuccess: () => {

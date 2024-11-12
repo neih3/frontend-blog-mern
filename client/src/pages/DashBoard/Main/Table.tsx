@@ -1,6 +1,12 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import Action from "./Action";
 
-const Table = ({ data, isSelected }: any) => {
+interface Props {
+  isSelected: string;
+  data: unknown[];
+}
+
+const Table = ({ data, isSelected }: Props) => {
   const keys = data && data[0] ? Object.keys(data[0]) : [];
   return (
     <div className="relative border border-gray-700 rounded-lg">

@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { Link, useLocation, useParams } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 import MarkdownEditor from "@uiw/react-markdown-editor";
 import { getABlog } from "../../api/blog";

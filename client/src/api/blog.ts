@@ -3,7 +3,7 @@ import instance from "./interceptor";
 import BlogPost from "../types/blog.type";
 
 // Khai báo URL chung cho toàn bộ API blog
-const baseURL = "http://localhost:3000/v1/blog";
+const baseURL = "https://backend-blog-mern-ctco.onrender.com/v1/blog";
 
 // Tạo blog mới
 const createBlog = async (

@@ -3,13 +3,10 @@ import instance from "./interceptor";
 import User from "../types/user.type";
 
 // Khai báo baseURL dùng chung cho toàn bộ API
-const baseURL = "http://localhost:3000";
+const baseURL = "https://backend-blog-mern-ctco.onrender.com";
 
 // Hàm đăng nhập
-const login = async (
-  email: string,
-  password: string
-): Promise<User | undefined> => {
+const login = async (email: string, password: string) => {
   try {
     const res = await axios.post(`${baseURL}/login`, { email, password });
     return res.data;
@@ -19,7 +16,7 @@ const login = async (
 };
 
 // Gửi link qua email
-const sendLinkEmail = async (email: string): Promise<any> => {
+const sendLinkEmail = async (email: string) => {
   try {
     const res = await axios.post(`${baseURL}/password-reset`, { email });
     return res.data;
@@ -41,11 +38,7 @@ const resetPassword = async (token: string, password: string) => {
 };
 
 // Đăng ký người dùng mới
-const register = async (
-  email: string,
-  password: string,
-  name: string
-): Promise<User | undefined> => {
+const register = async (email: string, password: string, name: string) => {
   try {
     const res = await axios.post(`${baseURL}/signup`, {
       email,
@@ -92,13 +85,19 @@ const refreshAccessToken = async (refresh_token: string) => {
   }
 };
 
-// Cập nhật thông tin người dùng
-const updateUser = async (user: string) => {
+const updateUser = async (user: User) => {
   try {
     const res = await instance.put(`${baseURL}/update-user`, user);
-    return res.data;
+
+    // Kiểm tra mã trạng thái phản hồi
+    if (res.status === 200) {
+      return res.data; // Trả về dữ liệu nếu cập nhật thành công
+    } else {
+      throw new Error(`Cập nhật không thành công: ${res.status}`);
+    }
   } catch (error) {
-    console.log(error);
+    console.error("Lỗi cập nhật người dùng:", error);
+    throw error; // Ném lại lỗi để có thể xử lý ở nơi khác
   }
 };
 

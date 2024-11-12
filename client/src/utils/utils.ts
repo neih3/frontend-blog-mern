@@ -1,6 +1,6 @@
 function getTimeAgo(timestamp: string) {
-  const now = new Date();
-  const past = new Date(timestamp);
+  const now = new Date().getTime();
+  const past = new Date(timestamp).getTime();
   const diffInSeconds = Math.floor((now - past) / 1000);
 
   const intervals = [

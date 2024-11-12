@@ -1,4 +1,8 @@
-const ToastMessage = ({ message }: string) => {
+interface Props {
+  message: string;
+}
+
+const ToastMessage = ({ message }: Props) => {
   return (
     <div>
       <div

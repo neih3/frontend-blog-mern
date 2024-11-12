@@ -3,7 +3,12 @@ import { Ellipsis } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { deleteBlog } from "../../../api/blog";
 
-const Action = ({ id, isSelected }: any) => {
+interface Props {
+  id: string;
+  isSelected: string;
+}
+
+const Action = ({ id, isSelected }: Props) => {
   console.log("id ne:", id);
   console.log(isSelected);
 

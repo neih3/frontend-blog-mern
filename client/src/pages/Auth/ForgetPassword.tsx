@@ -4,7 +4,7 @@ import ToastMessage from "../../Components/ToastMessage/ToastMessage"; // Giả 
 import { useFormik } from "formik";
 import * as Yup from "yup";
 const ForgetPassword = () => {
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState<string>("");
   const [showToast, setShowToast] = useState(false); // Trạng thái cho Toast
 
   // Ẩn Toast sau 3 giây
@@ -25,7 +25,7 @@ const ForgetPassword = () => {
       email: Yup.string()
         .required("Email is required")
         .matches(
-          /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/,
+          /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/,
           "Please enter a valid email address"
         ),
     }),
@@ -35,6 +35,7 @@ const ForgetPassword = () => {
         setMessage(res);
         setShowToast(true); // Hiện Toast
       } catch (error) {
+        console.log(error);
         setMessage("Registration failed. Please try again.");
         setShowToast(true);
       }

@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import { getTimeAgo } from "../../utils/utils";
 import { deleteCommentApi, updateComment } from "../../api/comment";
 import { useMutation, useQueryClient } from "@tanstack/react-query";

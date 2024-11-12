@@ -7,7 +7,7 @@ import * as Yup from "yup";
 import ToastMessage from "../../Components/ToastMessage/ToastMessage";
 
 const RegisterPage = () => {
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState<string>("");
   const [showToast, setShowToast] = useState(false); // Trạng thái cho Toast
   const navigate = useNavigate();
 
@@ -32,7 +32,7 @@ const RegisterPage = () => {
       email: Yup.string()
         .required("Email is required")
         .matches(
-          /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/,
+          /^[\w-\\.]+@([\w-]+\.)+[\w-]{2,4}$/,
           "Please enter a valid email address"
         ),
       password: Yup.string()
@@ -52,6 +52,7 @@ const RegisterPage = () => {
         setShowToast(true);
         navigate("/login"); // Điều hướng đến trang đăng nhập sau khi đăng ký thành công
       } catch (error) {
+        console.log(error);
         setMessage("Registration failed. Please try again.");
         setShowToast(true);
       }

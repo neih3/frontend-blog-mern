@@ -8,7 +8,7 @@ interface TitleType {
   setIsSelected: (value: string) => void;
 }
 
-const Item = ({ title, icon, isSelected, setIsSelected }: TitleType) => (
+const Item = ({ title, icon, setIsSelected }: TitleType) => (
   <li
     className="flex gap-4 items-center cursor-pointer"
     onClick={() => setIsSelected(title)}
@@ -18,7 +18,12 @@ const Item = ({ title, icon, isSelected, setIsSelected }: TitleType) => (
   </li>
 );
 
-const Sidebar = ({ isSelected, setIsSelected }: any) => {
+interface SidebarType {
+  setIsSelected: (value: string) => void;
+  isSelected: string;
+}
+
+const Sidebar = ({ isSelected, setIsSelected }: SidebarType) => {
   return (
     <div className="w-2/12 pl-6 pt-5 bg-slate-800 h-screen  ">
       <h3 className="mb-10 text-3xl">Admin</h3>

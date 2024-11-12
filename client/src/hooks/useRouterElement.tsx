@@ -15,6 +15,7 @@ import { LoginPage } from "../pages/Auth/LoginPage";
 import ResetPassword from "../pages/Auth/ResetPassword";
 import Dashboard from "../pages/DashBoard/Dashboard";
 
+// eslint-disable-next-line react-refresh/only-export-components
 function ProtectedRoute() {
   // Capitalized the component name
   const isAuthenticated = useSelector(
@@ -23,6 +24,7 @@ function ProtectedRoute() {
   return isAuthenticated ? <Outlet /> : <Navigate to="/login" />;
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 function RejectedRoute() {
   // Capitalized the component name
   const isAuthenticated = useSelector(

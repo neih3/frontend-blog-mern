@@ -47,7 +47,7 @@ export const LoginPage = () => {
       email: Yup.string()
         .required("Email is required")
         .matches(
-          /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/,
+          /^[\w-\\.]+@([\w-]+\.)+[\w-]{2,4}$/,
           "Please enter a valid email address"
         ),
       password: Yup.string()

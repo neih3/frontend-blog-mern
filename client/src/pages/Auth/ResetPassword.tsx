@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { resetPassword } from "../../api/auth";
 import ToastMessage from "../../Components/ToastMessage/ToastMessage";
@@ -8,29 +8,47 @@ const ResetPassword = () => {
   const navigate = useNavigate();
   const { token } = useParams();
   const [message, setMessage] = useState("");
-  const [showToast, setShowToast] = useState(false); // Trạng thái cho Toast
+  const [showToast, setShowToast] = useState(false);
 
-  const handleSubmit = async (email: string) => {
-    console.log("email:", email);
-    const res = await resetPassword(token, email);
-    setMessage(res);
-    setShowToast(true); // Hiện Toast
+  const handleSubmit = async (password: string) => {
+    // Kiểm tra token trước khi sử dụng
+    if (!token) {
+      setMessage("Invalid reset token");
+      setShowToast(true);
+      return;
+    }
+
+    try {
+      const res = await resetPassword(token, password);
+      setMessage(res);
+      setShowToast(true);
+    } catch (error) {
+      console.log(error);
+      setMessage("Reset password failed");
+      setShowToast(true);
+    }
   };
 
-  // Ẩn Toast sau 3 giây
+  useEffect(() => {
+    // Kiểm tra token khi component mount
+    if (!token) {
+      navigate("/login");
+    }
+  }, [token, navigate]);
+
   useEffect(() => {
     if (showToast) {
       const timer = setTimeout(() => {
-        setShowToast(false); // Ẩn Toast sau 3 giây
+        setShowToast(false);
         navigate("/login");
       }, 3000);
-      return () => clearTimeout(timer); // Xóa timer khi component unmount
+      return () => clearTimeout(timer);
     }
   }, [showToast, navigate]);
 
   return (
     <>
-      {showToast && <ToastMessage message={message} />}{" "}
+      {showToast && <ToastMessage message={message} />}
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm ">
           <form action="#" method="POST" className="space-y-6">

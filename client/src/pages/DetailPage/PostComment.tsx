@@ -1,8 +1,14 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, memo } from "react";
 import { createComment } from "../../api/comment";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-const PostComment = ({ user, blog }: any) => {
+interface Props {
+  user: string;
+  blog: string;
+}
+
+const PostComment = ({ user, blog }: Props) => {
   const [comment, setComment] = useState<string>("");
   console.log("Pos comment render");
   const queryClient = useQueryClient();

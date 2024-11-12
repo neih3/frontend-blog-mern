@@ -20,14 +20,14 @@ const Modal = ({ open, setOpen, user }: Props) => {
 
   const [avatar, setAvatar] = useState(user.avatar || "");
 
-  const [name, setName] = useState<string>(user.name);
+  const [name, setName] = useState(user.name || "");
 
   const [bio, setBio] = useState<string>(user.bio || "");
 
   const queryClient = useQueryClient();
 
   const updateUserMutation = useMutation({
-    mutationFn: (user: any) => updateUser(user),
+    mutationFn: (user: User) => updateUser(user),
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["user"] });
       dispatch(addUser(data));
@@ -50,7 +50,7 @@ const Modal = ({ open, setOpen, user }: Props) => {
     }
 
     // Sau khi upload thành công, cập nhật thông tin người dùng
-    updateUserMutation.mutate({ name, bio, avatar: updatedAvatar });
+    updateUserMutation.mutate({ ...user, name, bio, avatar: updatedAvatar });
   }
   return (
     <>

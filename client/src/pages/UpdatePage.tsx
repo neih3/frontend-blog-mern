@@ -39,6 +39,7 @@ const UpdatePage = () => {
   }, [id]);
 
   const updateBlogMutation = useMutation({
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     mutationFn: async ({ title, image, content, genres, user, id }: any) =>
       await updateBlog(title, image, content, genres, user, id),
     onSuccess: () => {
