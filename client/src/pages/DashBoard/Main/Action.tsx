@@ -35,7 +35,7 @@ const Action = ({ id, isSelected }: Props) => {
   }, []);
 
   const deleteBlogMutation = useMutation({
-    mutationFn: async () => await deleteBlog(id),
+    mutationFn: async (id: string) => await deleteBlog(id),
     onSuccess: async () => {
       // Cập nhật danh sách blog bằng cách gọi lại query "blogs"
       await queryClient.invalidateQueries({ queryKey: ["blogs"] });

@@ -4,7 +4,8 @@ import { Link } from "react-router-dom";
 import { getAllBlog, getBlogbyGenre } from "../../api/blog";
 
 interface Props {
-  genres: string[];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  genres: any[];
 }
 
 const Categories = ({ genres }: Props) => {

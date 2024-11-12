@@ -4,7 +4,7 @@ import { createComment } from "../../api/comment";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 interface Props {
-  user: string;
+  user: string | null;
   blog: string;
 }
 
@@ -44,7 +44,7 @@ const PostComment = ({ user, blog }: Props) => {
     // Reset comment sau khi gửi thành công
     setComment("");
   };
-
+  const isPending = addCommentMutation.status === "pending";
   return (
     <>
       <form onSubmit={handleSubmit}>
@@ -67,9 +67,9 @@ const PostComment = ({ user, blog }: Props) => {
             <button
               type="submit"
               className="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800"
-              disabled={addCommentMutation.isLoading}
+              disabled={isPending}
             >
-              {addCommentMutation.isLoading ? "Posting..." : "Post comment"}
+              {isPending ? "Posting..." : "Post comment"}
             </button>
           </div>
         </div>

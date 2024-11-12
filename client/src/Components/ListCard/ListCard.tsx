@@ -6,7 +6,8 @@ import BlogPost from "../../types/blog.type";
 import LazyLoad from "react-lazyload";
 
 interface Props {
-  data: BlogPost[];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  data: any[];
 }
 
 const ListCard = ({ data }: Props) => {
